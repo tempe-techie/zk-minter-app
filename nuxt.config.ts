@@ -47,6 +47,10 @@ export default defineNuxtConfig({
         300: 'https://sepolia.explorer.zksync.io',
         324: 'https://era.zksync.network',
       },
+      supportedChains: [
+        { chainId: 324, networkName: 'ZKsync Era' },
+        { chainId: 300, networkName: 'ZKsync Testnet' },
+      ],
       testVar: "test",
       wcProjectId: process.env.NUXT_PUBLIC_WC_PROJECT_ID,
     }

@@ -12,6 +12,25 @@
           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#aboutModal">About</button>
         </li>
 
+        <!-- Network dropdown -->
+        <li v-if="isActivated" class="nav-item dropdown">
+          <button 
+            class="btn btn-primary dropdown-toggle network-dropdown" 
+            data-bs-toggle="dropdown" type="button" 
+            aria-haspopup="true" aria-expanded="false"
+          >{{ getCurrentNetworkName }}</button>
+
+          <div class="dropdown-menu p-2 dropdown-menu-end set-cursor-pointer">
+            <span 
+              class="dropdown-item"
+              v-for="networkData in getNetworks"
+              :key="networkData.chainId"
+              @click="changeNetwork(networkData.chainId)"
+            >{{networkData.networkName}}</span>
+          </div>
+        </li>
+        <!-- END Network dropdown -->
+        <!-- Account dropdown -->
         <li v-if="isActivated" class="nav-item dropdown">
           <button 
             class="btn btn-primary dropdown-toggle" 
@@ -32,11 +51,13 @@
             <span class="dropdown-item" @click="disconnect">Disconnect</span>
           </div>
         </li>
+        <!-- END Account dropdown -->
 
+        <!-- Connect button -->
         <li class="nav-item" v-if="!isActivated">
           <ConnectButton />
         </li>
-
+        <!-- END Connect button -->
       </ul>
     </div>
   </div>
@@ -70,7 +91,8 @@
 </template>
 
 <script>
-import { useAccount, useDisconnect } from '@wagmi/vue';
+import { switchChain } from '@wagmi/core'
+import { useAccount, useConfig, useDisconnect } from '@wagmi/vue';
 import ConnectButton from './components/ConnectButton.vue';
 
 export default {
@@ -78,12 +100,6 @@ export default {
 
   components: {
     ConnectButton,
-  },
-
-  mounted() {
-    console.log("Navbar mounted");
-    // print test env var
-    console.log(this.$config.public.testVar);
   },
 
   computed: {
@@ -95,6 +111,14 @@ export default {
       return this.$config.public.blockExplorerBaseUrl[this.chainId]
     },
 
+    getCurrentNetworkName() {
+      return this.fetchNetworkName(this.chainId);
+    },
+
+    getNetworks() {
+      return this.$config.public.supportedChains;
+    },
+
     getShortAddress() {
       if (this.address) {
         return this.address.slice(0, 6) + '...' + this.address.slice(-4);
@@ -104,13 +128,29 @@ export default {
     }
   },
 
+  methods: {
+    async changeNetwork(chainId) {
+      await switchChain(this.config, { chainId })
+    },
+
+    fetchNetworkName(networkId) {
+      const network = this.$config.public.supportedChains.find(
+        chain => chain.chainId === Number(networkId)
+      );
+      
+      return network ? network.networkName : "Unsupported network";
+    },
+  },
+
   setup() {
     const { address, chainId, status } = useAccount()
+    const config = useConfig()
     const { disconnect } = useDisconnect()
 
     return {
       address,
       chainId,
+      config,
       disconnect,
       status,
     }
