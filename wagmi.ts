@@ -1,13 +1,13 @@
 import { http, cookieStorage, createConfig, createStorage } from '@wagmi/vue'
-import { mainnet, optimism, sepolia } from '@wagmi/vue/chains'
+import { zksync, zksyncSepoliaTestnet } from '@wagmi/vue/chains'
 import { injected, metaMask, walletConnect } from '@wagmi/vue/connectors'
 
 export const config = createConfig({
-  chains: [mainnet, sepolia, optimism],
+  chains: [zksync, zksyncSepoliaTestnet],
   connectors: [
     injected(),
     walletConnect({
-      projectId: "e530de3f33fc0bb0f23250ad87f78a4a",
+      projectId: import.meta.env.VITE_WC_PROJECT_ID,
     }),
     metaMask(),
   ],
@@ -16,9 +16,8 @@ export const config = createConfig({
   }),
   ssr: true,
   transports: {
-    [mainnet.id]: http(),
-    [sepolia.id]: http(),
-    [optimism.id]: http(),
+    [zksync.id]: http(),
+    [zksyncSepoliaTestnet.id]: http(),
   },
 })
 

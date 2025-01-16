@@ -1,7 +1,14 @@
 <template>
+  <Navbar />
   <Account />
   <Connect />
 </template>
+
+<script>
+export default {
+  name: "App",
+}
+</script>
 
 <style>
 :root {
