@@ -49,7 +49,7 @@ export default defineNuxtConfig({
         324: 'https://era.zksync.network',
       },
       favicon: '/img/favicon.svg',
-      projectMetadataTitle: 'ZK Minter',
+      projectMetadataTitle: 'ZK Minter Launcher',
       projectDescription: 'A web3 app that helps you launch a ZK Capped Minter V2 smart contract via the official ZkCappedMinterV2Factory.sol contract.',
       projectUrl: 'https://zkminter.org',
       projectTwitter: '@PunkDomains',

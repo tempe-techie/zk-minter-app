@@ -18,23 +18,20 @@
   </Head>
 
   <Navbar />
-  <Account />
-  <Connect />
+  <LaunchMinter />
 </div>
 </template>
 
 <script>
+import LaunchMinter from './components/LaunchMinter.vue';
 import Navbar from './components/Navbar.vue';
-import Account from './components/Account.vue';
-import Connect from './components/Connect.vue';
 
 export default {
   name: "App",
 
   components: {
+    LaunchMinter,
     Navbar,
-    Account,
-    Connect,
   }
 }
 </script>

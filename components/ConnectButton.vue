@@ -1,5 +1,5 @@
 <template>
-  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectModal">Connect wallet</button>
+  <button class="btn" :class="getColor" data-bs-toggle="modal" data-bs-target="#connectModal">Connect wallet</button>
 
   <!-- Connect Wallet modal -->
   <div class="modal modal-sm fade" id="connectModal" tabindex="-1" aria-labelledby="connectModalLabel" aria-hidden="true">
@@ -55,8 +55,15 @@ import { useChainId, useConnect } from '@wagmi/vue'
 
 export default {
   name: "ConnectButton",
+  props: ['color'], // bg: 'btn-primary' or 'btn-dark'
 
-  methods: {
+  computed: {
+    getColor() {
+      return this.color || 'btn-primary'
+    }
+  },
+  
+  methods: {    
     async connectInjected() {
       try {
         await this.connect({ connector: this.connectors[0], chainId: this.chainId });

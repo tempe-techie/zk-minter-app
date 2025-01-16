@@ -30,6 +30,7 @@
           </div>
         </li>
         <!-- END Network dropdown -->
+         
         <!-- Account dropdown -->
         <li v-if="isActivated" class="nav-item dropdown">
           <button 
