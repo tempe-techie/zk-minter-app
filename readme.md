@@ -4,6 +4,16 @@ A web3 app that helps you launch a ZK Capped Minter V2 smart contract via the of
 
 Website: https://zkminter.org/ 
 
+## How to connect your Safe to the app
+
+1. In the ZK Minter app, click on the "Connect Wallet" button and select "WalletConnect"
+2. A small modal will appear. Click on the copy icon (two overlapping squares) to copy the WalletConnect URI
+3. Go to https://app.safe.global/ and open your Safe
+4. In the navigation bar, click on the "WalletConnect" icon
+5. In the modal that appears, enter the WalletConnect URI that you copied in the previous step
+6. Wait for the Safe to connect
+7. You should now see your Safe address in the ZK Minter app
+
 ## ZK Minter Factory contracts
 
 - [ZKsync Era](https://era.zksync.network/address/0x0400E6bc22B68686Fb197E91f66E199C6b0DDD6a)

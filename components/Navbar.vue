@@ -83,6 +83,17 @@
             <a href="https://github.com/tempe-techie/zk-minter-frontend" target="_blank">https://github.com/tempe-techie/zk-minter-frontend</a>
           </li>
         </ul>
+
+        <hr />
+
+        <h4>How to connect your Safe to the app:</h4>
+        <p>1. In the ZK Minter app, click on the "Connect Wallet" button and select "WalletConnect"</p>
+        <p>2. A small modal will appear. Click on the copy icon (two overlapping squares) to copy the WalletConnect URI</p>
+        <p>3. Go to <a href="https://app.safe.global/" target="_blank">https://app.safe.global/</a> and open your Safe</p>
+        <p>4. In the navigation bar, click on the "WalletConnect" icon</p>
+        <p>5. In the modal that appears, enter the WalletConnect URI that you copied in the previous step</p>
+        <p>6. Wait for the Safe to connect</p>
+        <p>7. You should now see your Safe address in the ZK Minter app</p>
       </div>
     </div>
   </div>
