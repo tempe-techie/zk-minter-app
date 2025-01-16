@@ -83,7 +83,7 @@
 <script>
 import { switchChain } from '@wagmi/core'
 import { useAccount, useConfig, useDisconnect } from '@wagmi/vue';
-import { useToast, TYPE } from "vue-toastification";
+import { useToast } from "vue-toastification";
 import ConnectButton from './components/ConnectButton.vue';
 import WaitingToast from './components/WaitingToast.vue';
 
