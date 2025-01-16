@@ -30,7 +30,7 @@
           </div>
         </li>
         <!-- END Network dropdown -->
-         
+
         <!-- Account dropdown -->
         <li v-if="isActivated" class="nav-item dropdown">
           <button 
@@ -43,7 +43,7 @@
 
           <div class="dropdown-menu dropdown-menu-end set-cursor-pointer">
             
-            <a :href="getBlockExplorerBaseUrl+'/address/'+address" class="short-address" target="_blank">
+            <a :href="getBlockExplorerBaseUrl+'/address/'+address" class="short-address text-decoration-none" target="_blank">
               <span class="dropdown-item">
                 {{ getShortAddress }}
               </span>

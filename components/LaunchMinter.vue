@@ -61,10 +61,10 @@
       <button
         v-if="isActivated"
         class="btn btn-dark mt-4 mb-2"
-        :disabled="waitingData"
-        @click="createMinter"
+        :disabled="waitingLaunchMinter"
+        @click="launchMinter"
       >
-        <span v-if="waitingData" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+        <span v-if="waitingLaunchMinter" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
         Create ZK Minter Contract
       </button>
       <!-- END Load button -->
@@ -83,19 +83,23 @@
 <script>
 import { switchChain } from '@wagmi/core'
 import { useAccount, useConfig, useDisconnect } from '@wagmi/vue';
+import { useToast, TYPE } from "vue-toastification";
 import ConnectButton from './components/ConnectButton.vue';
+import WaitingToast from './components/WaitingToast.vue';
 
 export default {
   name: 'LaunchMinter',
 
   components: {
     ConnectButton,
+    WaitingToast,
   },
 
   data() {
     return {
       minterAdminAddress: null,
       minterCap: null,
+      waitingLaunchMinter: false,
     }
   },
 
@@ -125,12 +129,22 @@ export default {
       
       return network ? network.networkName : "Unsupported network";
     },
+
+    async launchMinter() {
+      this.waitingLaunchMinter = true;
+
+      // TODO: Launch minter code
+      this.toast.success('Launching minter...')
+      
+      this.waitingLaunchMinter = false;
+    },
   },
 
   setup() {
     const { address, chainId, status } = useAccount()
     const config = useConfig()
     const { disconnect } = useDisconnect()
+    const toast = useToast();
 
     return {
       address,
@@ -138,6 +152,7 @@ export default {
       config,
       disconnect,
       status,
+      toast,
     }
   }
 }
