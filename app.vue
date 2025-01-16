@@ -1,35 +1,24 @@
 <template>
+<div>
   <Navbar />
   <Account />
   <Connect />
+</div>
 </template>
 
 <script>
+import Navbar from './components/Navbar.vue';
+import Account from './components/Account.vue';
+import Connect from './components/Connect.vue';
+
 export default {
   name: "App",
+
+  components: {
+    Navbar,
+    Account,
+    Connect,
+  }
 }
 </script>
 
-<style>
-:root {
-  background-color: #181818;
-  color: rgba(255, 255, 255, 0.87);
-  color-scheme: light dark;
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  font-synthesis: none;
-  font-weight: 400;
-  line-height: 1.5;
-  text-rendering: optimizeLegibility;
-
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-@media (prefers-color-scheme: light) {
-  :root {
-    background-color: #f8f8f8;
-    color: #181818;
-  }
-}
-</style>

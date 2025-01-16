@@ -1,0 +1,111 @@
+<template>
+  <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#connectModal">Connect wallet</button>
+
+  <!-- Connect Wallet modal -->
+  <div class="modal modal-sm fade" id="connectModal" tabindex="-1" aria-labelledby="connectModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Connect your wallet</h5>
+          <button id="closeConnectModal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="modal-body row">
+
+          <div class="card col-6 card-wallet" role="button" @click.stop="connectRabby">
+            <img src="/img/wallets/rabby.png" class="card-img-top card-img-wallet" alt="Rabby">
+            <small class="text-center mb-3 text-muted">Rabby</small>
+          </div> 
+
+          <div class="card col-6 card-wallet" role="button" @click.stop="connectWalletConnect">
+            <img src="/img/wallets/wc.png" class="card-img-top card-img-wallet" alt="WalletConnect">
+            <small class="text-center mb-3 text-muted">WalletConnect</small>
+          </div> 
+
+          <div class="card col-6 card-wallet" role="button" @click.stop="connectMetaMask">
+            <img src="/img/wallets/metamask.png" class="card-img-top card-img-wallet" alt="MetaMask">
+            <small class="text-center mb-3 text-muted">MetaMask</small>
+          </div>
+
+          <div class="card col-6 card-wallet" role="button" @click.stop="connectInjected">
+            <img src="/img/wallets/rainbow.png" class="card-img-top card-img-wallet" alt="Rainbow">
+            <small class="text-center mb-3 text-muted">Rainbow</small>
+          </div> 
+
+          <div class="card col-6 card-wallet" role="button" @click.stop="connectInjected">
+            <img src="/img/wallets/bifrost.png" class="card-img-top card-img-wallet" alt="Bifrost">
+            <small class="text-center mb-3 text-muted">Bifrost</small>
+          </div> 
+
+          <div class="card col-6 card-wallet" role="button" @click.stop="connectInjected">
+            <img src="/img/wallets/brave.png" class="card-img-top card-img-wallet" alt="Brave">
+            <small class="text-center mb-3 text-muted">Brave</small>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- END Connect Wallet modal -->
+</template>
+
+<script>
+import { useChainId, useConnect } from '@wagmi/vue'
+
+export default {
+  name: "ConnectButton",
+
+  methods: {
+    async connectInjected() {
+      try {
+        await this.connect({ connector: this.connectors[0], chainId: this.chainId });
+        document.getElementById('closeConnectModal').click();
+      } catch (error) {
+        console.error("Failed to connect injected wallet:", error);
+      }
+    },
+
+    async connectMetaMask() {
+      try {
+        await this.connect({ connector: this.connectors[2], chainId: this.chainId });
+        document.getElementById('closeConnectModal').click();
+      } catch (error) {
+        console.error("Failed to connect MetaMask:", error);
+      }
+    },
+
+    async connectRabby() {
+      try {
+        await this.connect({ connector: this.connectors[4], chainId: this.chainId });
+        document.getElementById('closeConnectModal').click();
+      } catch (error) {
+        console.error("Failed to connect rabby wallet:", error);
+      }
+    },
+
+    async connectWalletConnect() {
+      try {
+        await this.connect({ connector: this.connectors[1], chainId: this.chainId });
+        document.getElementById('closeConnectModal').click();
+      } catch (error) {
+        console.error("Failed to connect WalletConnect:", error);
+      }
+    },
+  },
+
+  setup() {
+    const chainId = useChainId()
+    const { connect, connectors, error, status } = useConnect()
+
+    return {
+      chainId,
+      connect,
+      connectors,
+      error,
+      status,
+    }
+  }
+}
+</script>
+
