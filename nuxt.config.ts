@@ -48,6 +48,12 @@ export default defineNuxtConfig({
         300: 'https://sepolia.explorer.zksync.io',
         324: 'https://era.zksync.network',
       },
+      favicon: '/img/favicon.svg',
+      projectMetadataTitle: 'ZK Minter',
+      projectDescription: 'A web3 app that helps you launch a ZK Capped Minter V2 smart contract via the official ZkCappedMinterV2Factory.sol contract.',
+      projectUrl: 'https://zkminter.org',
+      projectTwitter: '@PunkDomains',
+      previewImage: '/img/preview.png',
       supportedChains: [
         { chainId: 324, networkName: 'ZKsync Era' },
         { chainId: 300, networkName: 'ZKsync Testnet' },
