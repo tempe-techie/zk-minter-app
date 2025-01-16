@@ -7,7 +7,7 @@ export const config = createConfig({
   connectors: [
     injected(),
     walletConnect({
-      projectId: process.env.NUXT_PUBLIC_WC_PROJECT_ID!,
+      projectId: "52c7d5d213747b65f5f3c4aa92df1682",
     }),
     metaMask(),
   ],
