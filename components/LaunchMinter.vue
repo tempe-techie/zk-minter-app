@@ -1,7 +1,9 @@
 <template>
-<!-- Create ZK Minter -->
-<div class="d-flex justify-content-center">
-  <div class="card text-white bg-primary send-tokens-card">
+  <h4 class="mt-4 text-center">Launch Minter Contract</h4>
+
+  <!-- Create ZK Minter -->
+  <div class="d-flex justify-content-center">
+    <div class="card text-white bg-primary send-tokens-card">
     <div class="card-body text-center">
 
       <!-- Connect wallet button -->
@@ -35,8 +37,6 @@
         </div>
       </div>
       <!-- END Select network -->
-
-      <h4 class="mt-4">Launch Minter contract</h4>
 
       <!-- Admin address field -->
       <div>
@@ -121,7 +121,7 @@
         </small>
       </div>
 
-      <!-- Load button -->
+      <!-- Launch button -->
       <button
         v-if="isActivated && isChainSupported"
         class="btn btn-dark mt-4 mb-2"
@@ -129,9 +129,9 @@
         @click="launchMinter"
       >
         <span v-if="waitingLaunchMinter" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-        Create ZK Minter Contract
+        Create Minter Contract
       </button>
-      <!-- END Load button -->
+      <!-- END Launch button -->
 
       <!-- Switch to supported network alert -->
       <button
@@ -157,7 +157,8 @@
 
       <!-- Success message -->
       <div v-if="showSuccessMessage" class="alert alert-success mt-4">
-        Success! Minter contract address: <a :href="getBlockExplorerUrl(minterContractAddress)" target="_blank">{{ minterContractAddress }}</a>
+        Success! 
+        Minter contract address: <a :href="getBlockExplorerUrl(minterContractAddress)" target="_blank">{{ minterContractAddress }}</a>
       </div>
       <!-- END Success message -->
 
@@ -191,6 +192,7 @@ export default {
       minterContractAddress: null,
       startDate: null,
       showSuccessMessage: false,
+      txHash: null,
       waitingLaunchMinter: false,
     }
   },
@@ -202,6 +204,14 @@ export default {
 
     getNetworks() {
       return this.$config.public.supportedChains;
+    },
+
+    getTxUrl() {
+      if (this.txHash && this.chainId) {
+        return this.$config.public.blockExplorerBaseUrl[this.chainId] + "/tx/" + this.txHash;
+      }
+
+      return null;
     },
 
     isActivated() {
@@ -291,7 +301,7 @@ export default {
 
       try {
         // Send the transaction and get hash
-        const hash = await writeContract(this.config, {
+        this.txHash = await writeContract(this.config, {
           address: factoryAddress,
           abi: factoryAbi,
           functionName: 'createCappedMinter',
@@ -299,7 +309,7 @@ export default {
         });
 
         // Wait for transaction to be mined
-        const receipt = await waitForTransactionReceipt(this.config, { hash })
+        const receipt = await waitForTransactionReceipt(this.config, { hash: this.txHash })
 
         // Check if transaction was successful
         if (!receipt || receipt.status !== "success") {
