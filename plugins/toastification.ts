@@ -1,5 +1,5 @@
 import { defineNuxtPlugin } from 'nuxt/app'
-import Toast from 'vue-toastification/dist/index.mjs'
+import Toast from "vue-toastification";
 
 const options = {
   timeout: 5000,

@@ -83,16 +83,16 @@
 <script>
 import { switchChain } from '@wagmi/core'
 import { useAccount, useConfig, useDisconnect } from '@wagmi/vue';
-//import { useToast } from "vue-toastification";
+import { useToast } from "vue-toastification";
 import ConnectButton from './components/ConnectButton.vue';
-//import WaitingToast from './components/WaitingToast.vue';
+import WaitingToast from './components/WaitingToast.vue';
 
 export default {
   name: 'LaunchMinter',
 
   components: {
     ConnectButton,
-    //WaitingToast,
+    WaitingToast,
   },
 
   data() {
@@ -134,7 +134,7 @@ export default {
       this.waitingLaunchMinter = true;
 
       // TODO: Launch minter code
-      //this.toast.success('Launching minter...')
+      this.toast.success('Launching minter...')
       
       this.waitingLaunchMinter = false;
     },
@@ -144,7 +144,7 @@ export default {
     const { address, chainId, status } = useAccount()
     const config = useConfig()
     const { disconnect } = useDisconnect()
-    //const toast = useToast();
+    const toast = useToast();
 
     return {
       address,
@@ -152,7 +152,7 @@ export default {
       config,
       disconnect,
       status,
-      //toast,
+      toast,
     }
   }
 }
