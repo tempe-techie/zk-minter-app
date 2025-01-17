@@ -1,7 +1,7 @@
 <template>
-  <h4 class="mt-4 text-center">Grant Minter Role</h4>
+  <h4 class="mt-4 text-center">Mint ZK Tokens</h4>
 
-  <!-- Grant minter role -->
+  <!-- Mint ZK tokens -->
   <div class="d-flex justify-content-center">
     <div class="card text-white bg-primary send-tokens-card">
       <div class="card-body text-center">
@@ -37,33 +37,45 @@
           </div>
         </div>
         <!-- END Select network -->
-       
+
         <!-- Minter contract address field -->
         <div>
           <label for="minterContractAddressField" class="form-label mt-4">Minter contract address</label>
           <input v-model="minterContractAddress" placeholder="Enter minter contract address" class="form-control" id="minterContractAddressField">
         </div>
-
-        <!-- Minter address field -->
+       
+        <!-- Recipient address field -->
         <div>
-          <label for="minterAddressField" class="form-label mt-4">Address to give Minter role to</label>
-          <input v-model="minterAddress" placeholder="Enter address" class="form-control" id="minterAddressField">
+          <label for="recipientAddressField" class="form-label mt-4">ZK Tokens Recipient address</label>
+          <input v-model="recipientAddress" placeholder="Enter recipient address" class="form-control" id="recipientAddressField">
           <small id="minterAddressHelp" class="form-text text-muted">
-            Enter the address of a person (or Safe multisig) that you want to grant the minter role to. This address will then be able to mint ZK tokens.
+            Enter the address which will receive the newly minted ZK tokens.
           </small>
         </div>
 
-        <!-- Grant button -->
+        <!-- Amount of ZK tokens to mint -->
+        <div>
+          <label for="minterCapField" class="form-label mt-4">Amount of ZK tokens to mint</label>
+          <div class="input-group">
+            <span class="input-group-text">ZK</span>
+            <input type="text" class="form-control" v-model="zkAmount" placeholder="Enter amount of ZK tokens to mint">
+          </div>
+          <small id="minterCapHelp" class="form-text text-muted">
+            The amount of ZK tokens that will be minted to the recipient address.
+          </small>
+        </div>
+
+        <!-- Mint button -->
         <button
           v-if="isActivated && isChainSupported"
           class="btn btn-dark mt-4 mb-2"
-          :disabled="waitingGrantRole"
-          @click="grantRole"
+          :disabled="waitingMint"
+          @click="mintTokens"
         >
-          <span v-if="waitingGrantRole" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
-          Grant Minter Role
+          <span v-if="waitingMint" class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Mint ZK Tokens
         </button>
-        <!-- END Grant button -->
+        <!-- END Mint button -->
 
         <!-- Switch to supported network alert -->
         <button
@@ -89,25 +101,25 @@
 
         <!-- Success message -->
         <div v-if="showSuccessMessage" class="alert alert-success mt-4">
-          The Minter role was successfully granted! <a :href="getTxUrl" target="_blank">View transaction</a>.
+          ZK tokens were successfully minted! <a :href="getTxUrl" target="_blank">View transaction</a>.
         </div>
         <!-- END Success message -->
         
       </div>
     </div>
   </div>
-  <!-- END Grant minter role -->
+  <!-- END Mint ZK tokens -->
 </template>
 
 <script>
 import { switchChain, waitForTransactionReceipt, writeContract } from '@wagmi/core';
 import { useAccount, useConfig } from '@wagmi/vue';
-import { isAddress, keccak256, toBytes } from 'viem'
+import { isAddress, parseEther } from 'viem'
 import ConnectButton from './components/ConnectButton.vue';
 import minterAbi from './data/abi/MinterAbi.json';
 
 export default {
-  name: 'GrantMinterRole',
+  name: 'MintZkTokens',
 
   components: {
     ConnectButton,
@@ -116,11 +128,12 @@ export default {
   data() {
     return {
       errorMessage: null,
-      minterAddress: null,
       minterContractAddress: null,
+      recipientAddress: null,
       showSuccessMessage: false,
       txHash: null,
-      waitingGrantRole: false,
+      waitingMint: false,
+      zkAmount: null,
     }
   },
 
@@ -152,6 +165,15 @@ export default {
 
       return false;
     },
+
+    zkAmountToWei() {
+      // if not a number, return null
+      if (isNaN(this.zkAmount)) {
+        return null;
+      }
+
+      return parseEther(String(this.zkAmount));
+    },
   },
 
   methods: {
@@ -167,38 +189,47 @@ export default {
       return network ? network.networkName : "Unsupported network";
     },
 
-    async grantRole() {
-      this.waitingGrantRole = true;
+    async mintTokens() {
+      this.waitingMint = true;
       
       // check if minter contract address is valid
       if (!isAddress(this.minterContractAddress)) {
         this.errorMessage = "Invalid minter contract address";
-        this.waitingGrantRole = false;
+        this.waitingMint = false;
         return;
       }
 
-      // check if minter address is valid
-      if (!isAddress(this.minterAddress)) {
-        this.errorMessage = "Invalid address to give Minter role to";
-        this.waitingGrantRole = false;
+      // check if recipient address is valid
+      if (!isAddress(this.recipientAddress)) {
+        this.errorMessage = "Invalid recipient address";
+        this.waitingMint = false;
         return;
       }
 
-      // Calculate MINTER_ROLE hash
-      const MINTER_ROLE = keccak256(toBytes('MINTER_ROLE'))
+      // check if amount of ZK tokens to mint is valid
+      if (!this.zkAmountToWei) {
+        this.errorMessage = "Invalid amount of ZK tokens to mint";
+        this.waitingMint = false;
+        return;
+      }
+
+      console.log("zkAmountInWei:", this.zkAmountToWei);
 
       try {
-        // grant minter role
+        // mint ZK tokens
         this.txHash = await writeContract(this.config, {
           address: this.minterContractAddress,
           abi: minterAbi,
-          functionName: "grantRole",
-          args: [MINTER_ROLE, this.minterAddress],
+          functionName: "mint",
+          args: [this.recipientAddress, this.zkAmountToWei],
         });
+
+        console.log("txHash", this.txHash);
 
         // Wait for transaction to be mined
         const receipt = await waitForTransactionReceipt(this.config, { hash: this.txHash })
-
+        console.log("receipt", receipt);
+        
         // Check if transaction was successful
         if (!receipt || receipt.status !== "success") {
           throw new Error('Transaction failed');
@@ -207,10 +238,10 @@ export default {
         console.log("Transaction successful.")
         this.showSuccessMessage = true;
       } catch (error) {
-        this.errorMessage = "Error granting Minter role: " + error.message;
+        this.errorMessage = "Error minting ZK tokens: " + error.message;
       }
 
-      this.waitingGrantRole = false;
+      this.waitingMint = false;
     }
   },
 

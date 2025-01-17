@@ -101,8 +101,8 @@
 
 <script>
 import { switchChain, waitForTransactionReceipt, writeContract } from '@wagmi/core';
-import { useAccount, useConfig, useDisconnect } from '@wagmi/vue';
-import { isAddress, parseEther, keccak256, toBytes } from 'viem'
+import { useAccount, useConfig } from '@wagmi/vue';
+import { isAddress, keccak256, toBytes } from 'viem'
 import ConnectButton from './components/ConnectButton.vue';
 import minterAbi from './data/abi/MinterAbi.json';
 
@@ -167,10 +167,6 @@ export default {
       return network ? network.networkName : "Unsupported network";
     },
 
-    getBlockExplorerUrl(address) {
-      return this.$config.public.blockExplorerBaseUrl[this.chainId] + "/address/" + address;
-    },
-
     async revokeRole() {
       this.waitingRevokeRole = true;
       
@@ -221,13 +217,11 @@ export default {
   setup() {
     const { address, chainId, status } = useAccount()
     const config = useConfig()
-    const { disconnect } = useDisconnect()
 
     return {
       address,
       chainId,
       config,
-      disconnect,
       status,
     }
   }
