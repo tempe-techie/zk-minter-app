@@ -19,12 +19,16 @@
 
   <Navbar />
   <LaunchMinter />
+  <GrantMinterRole />
+  <RevokeMinterRole />
 </div>
 </template>
 
 <script>
 import LaunchMinter from './components/LaunchMinter.vue';
 import Navbar from './components/Navbar.vue';
+import GrantMinterRole from './components/GrantMinterRole.vue';
+import RevokeMinterRole from './components/RevokeMinterRole.vue';
 
 export default {
   name: "App",
@@ -32,6 +36,8 @@ export default {
   components: {
     LaunchMinter,
     Navbar,
+    GrantMinterRole,
+    RevokeMinterRole,
   }
 }
 </script>

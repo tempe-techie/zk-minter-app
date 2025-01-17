@@ -36,7 +36,9 @@
       </div>
       <!-- END Select network -->
 
-      <!-- Create ZK Minter Form -->
+      <h4 class="mt-4">Launch Minter contract</h4>
+
+      <!-- Admin address field -->
       <div>
         <label for="adminAddressField" class="form-label mt-4">Admin address</label>
         <input v-model="minterAdminAddress" placeholder="Enter admin address" class="form-control" id="adminAddressField">
@@ -45,6 +47,7 @@
         </small>
       </div>
 
+      <!-- Minter cap field -->
       <div>
         <label for="minterCapField" class="form-label mt-4">ZK token cap</label>
         <div class="input-group">
@@ -56,8 +59,9 @@
         </small>
       </div>
 
+      <!-- Start time field -->
       <div>
-        <label for="startTimeField" class="form-label mt-4">Start time (UTC)</label>
+        <label for="startTimeField" class="form-label mt-4">Start date (UTC)</label>
         <div class="input-group">
           <DatePicker 
             v-model="startDate" 
@@ -85,7 +89,37 @@
           The date and time in UTC when the minter contract can start minting.
         </small>
       </div>
-      <!-- END Create ZK Minter Form -->
+      
+      <!-- End time field -->
+      <div>
+        <label for="endTimeField" class="form-label mt-4">End date (UTC)</label>
+        <div class="input-group">
+          <DatePicker 
+            v-model="endDate" 
+            mode="dateTime" 
+            is24hr 
+            timezone="UTC"
+            @dayclick="(_, event) => {event.target.blur();}"
+          >
+            <template v-slot="{ inputValue, inputEvents }">
+              <div class="input-group">
+                <button class="btn btn-dark" type="button" v-on="inputEvents">
+                  <i class="bi bi-calendar-event"></i>
+                </button>
+                <input 
+                  class="form-control"
+                  :value="inputValue"
+                  placeholder="Select end date and time"
+                  readonly
+                >
+              </div>
+            </template>
+          </DatePicker>
+        </div>
+        <small id="endTimeHelp" class="form-text text-muted">
+          The date and time in UTC when the minter contract can stop minting.
+        </small>
+      </div>
 
       <!-- Load button -->
       <button
@@ -136,6 +170,7 @@ export default {
 
   data() {
     return {
+      endDate: null,
       minterAdminAddress: null,
       minterCap: null,
       waitingLaunchMinter: false,
@@ -164,6 +199,10 @@ export default {
       return false;
     },
 
+    minterEndTime() {
+      return this.endDate ? Math.floor(this.endDate.getTime() / 1000) : null;
+    },
+
     minterStartTime() {
       return this.startDate ? Math.floor(this.startDate.getTime() / 1000) : null;
     },
@@ -190,6 +229,8 @@ export default {
       console.log("Minter cap:", this.minterCap);
       console.log("Minter start date:", this.startDate);
       console.log("Minter start timestamp:", this.minterStartTime);
+      console.log("Minter end date:", this.endDate);
+      console.log("Minter end timestamp:", this.minterEndTime);
       
       this.waitingLaunchMinter = false;
     },
