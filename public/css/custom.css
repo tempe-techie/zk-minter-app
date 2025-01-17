@@ -63,18 +63,6 @@ a:hover {
   cursor: pointer;
 }
 
-.Vue-Toastification__toast--info {
-  background-color: #268bd2;
-}
-
-.Vue-Toastification__toast--success {
-  background-color: #2aa198;
-}
-
-.Vue-Toastification__toast--error {
-  background-color: #d33682;
-}
-
 @media only screen and (max-width: 768px) {
   /* For mobile phones: */
   .balances-card, .send-tokens-card {

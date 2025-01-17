@@ -59,7 +59,7 @@
 
       <!-- Load button -->
       <button
-        v-if="isActivated"
+        v-if="isActivated && isChainSupported"
         class="btn btn-dark mt-4 mb-2"
         :disabled="waitingLaunchMinter"
         @click="launchMinter"
@@ -68,6 +68,16 @@
         Create ZK Minter Contract
       </button>
       <!-- END Load button -->
+
+      <!-- Switch to supported network alert -->
+      <button
+        v-if="isActivated && !isChainSupported"
+        class="btn btn-dark mt-4 mb-2"
+        :disabled="true"
+      >
+        Switch to supported network
+      </button>
+      <!-- END Switch to supported network alert -->
 
       <!-- Connect wallet button -->
       <div class="mt-4" v-if="!isActivated">
@@ -81,18 +91,15 @@
 </template>
 
 <script>
-import { switchChain } from '@wagmi/core'
+import { switchChain } from '@wagmi/core';
 import { useAccount, useConfig, useDisconnect } from '@wagmi/vue';
-import { useToast } from "vue-toastification";
 import ConnectButton from './components/ConnectButton.vue';
-import WaitingToast from './components/WaitingToast.vue';
 
 export default {
   name: 'LaunchMinter',
 
   components: {
     ConnectButton,
-    WaitingToast,
   },
 
   data() {
@@ -115,6 +122,14 @@ export default {
     isActivated() {
       return this.status === 'connected'
     },
+
+    isChainSupported() {
+      if (this.$config.public.supportedChains.find(chain => Number(chain.chainId) === Number(this.chainId))) {
+        return true;
+      }
+
+      return false;
+    },
   },
 
   methods: {
@@ -134,7 +149,6 @@ export default {
       this.waitingLaunchMinter = true;
 
       // TODO: Launch minter code
-      this.toast.success('Launching minter...')
       
       this.waitingLaunchMinter = false;
     },
@@ -144,7 +158,6 @@ export default {
     const { address, chainId, status } = useAccount()
     const config = useConfig()
     const { disconnect } = useDisconnect()
-    const toast = useToast();
 
     return {
       address,
@@ -152,7 +165,6 @@ export default {
       config,
       disconnect,
       status,
-      toast,
     }
   }
 }

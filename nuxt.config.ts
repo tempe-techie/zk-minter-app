@@ -41,7 +41,6 @@ export default defineNuxtConfig({
     },
   },
   components: false,
-  css: ['vue-toastification/dist/index.css'],
   runtimeConfig: {
     public: {
       blockExplorerBaseUrl: {
