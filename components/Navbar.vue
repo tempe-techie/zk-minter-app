@@ -1,15 +1,40 @@
 <template>
 <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">ZK Minter Launcher</a>
+    <NuxtLink to="/" class="navbar-brand">
+      ZK Minter Launcher
+    </NuxtLink>
+
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
+    
     <div class="collapse navbar-collapse" id="navbarColor01">
       <ul class="navbar-nav ms-auto">
         
         <li class="nav-item">
           <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#aboutModal">About</button>
+        </li>
+
+        <li class="nav-item dropdown">
+          <button 
+            class="btn btn-primary dropdown-toggle" 
+            data-bs-toggle="dropdown" 
+            type="button" 
+            aria-haspopup="true" 
+            aria-expanded="false"
+          >
+            Minter Roles
+          </button>
+
+          <div class="dropdown-menu dropdown-menu-end set-cursor-pointer">
+            <NuxtLink to="/grant-minter-role" class="dropdown-item">
+              Grant Minter Role
+            </NuxtLink>
+            <NuxtLink to="/revoke-minter-role" class="dropdown-item">
+              Revoke Minter Role
+            </NuxtLink>
+          </div>
         </li>
 
         <!-- Network dropdown -->

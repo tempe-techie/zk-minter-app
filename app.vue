@@ -1,5 +1,4 @@
 <template>
-<div>
   <Head>
     <Title>{{ $config.public.projectMetadataTitle }}</Title>
     <Meta name="description" :content="$config.public.projectDescription" />
@@ -17,28 +16,18 @@
     <Meta name="twitter:image" :content="$config.public.projectUrl + $config.public.previewImage" />
   </Head>
 
-  <Navbar />
-  <LaunchMinter />
-  <GrantMinterRole />
-  <RevokeMinterRole />
-</div>
+  <div>
+    <Navbar />
+    <NuxtPage />
+  </div>
 </template>
 
 <script>
-import LaunchMinter from './components/LaunchMinter.vue';
-import Navbar from './components/Navbar.vue';
-import GrantMinterRole from './components/GrantMinterRole.vue';
-import RevokeMinterRole from './components/RevokeMinterRole.vue';
+import Navbar from './components/Navbar.vue'
 
 export default {
-  name: "App",
-
   components: {
-    LaunchMinter,
-    Navbar,
-    GrantMinterRole,
-    RevokeMinterRole,
+    Navbar
   }
 }
 </script>
-
