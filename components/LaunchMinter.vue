@@ -149,16 +149,30 @@
       </div>
       <!-- END Connect wallet button -->
 
+      <!-- Error message -->
+      <div v-if="errorMessage" class="alert alert-danger mt-4">
+        {{ errorMessage }}
+      </div>
+      <!-- END Error message -->
+
+      <!-- Success message -->
+      <div v-if="showSuccessMessage" class="alert alert-success mt-4">
+        Success! Minter contract address: <a :href="getBlockExplorerUrl(minterContractAddress)" target="_blank">{{ minterContractAddress }}</a>
+      </div>
+      <!-- END Success message -->
+
     </div>
   </div>
 </div>
 </template>
 
 <script>
-import { switchChain } from '@wagmi/core';
+import { switchChain, writeContract } from '@wagmi/core';
 import { useAccount, useConfig, useDisconnect } from '@wagmi/vue';
-import ConnectButton from './components/ConnectButton.vue';
 import { DatePicker } from 'v-calendar';
+import { isAddress, parseEther } from 'viem'
+import ConnectButton from './components/ConnectButton.vue';
+import factoryAbi from './data/abi/FactoryAbi.json';
 
 export default {
   name: 'LaunchMinter',
@@ -171,10 +185,13 @@ export default {
   data() {
     return {
       endDate: null,
+      errorMessage: null,
       minterAdminAddress: null,
       minterCap: null,
-      waitingLaunchMinter: false,
+      minterContractAddress: null,
       startDate: null,
+      showSuccessMessage: false,
+      waitingLaunchMinter: false,
     }
   },
 
@@ -206,6 +223,15 @@ export default {
     minterStartTime() {
       return this.startDate ? Math.floor(this.startDate.getTime() / 1000) : null;
     },
+
+    zkCapToWei() {
+      // if not a number, return null
+      if (isNaN(this.minterCap)) {
+        return null;
+      }
+
+      return parseEther(String(this.minterCap));
+    },
   },
 
   methods: {
@@ -221,16 +247,114 @@ export default {
       return network ? network.networkName : "Unsupported network";
     },
 
+    getBlockExplorerUrl(address) {
+      return this.$config.public.blockExplorerBaseUrl[this.chainId] + "/address/" + address;
+    },
+
     async launchMinter() {
       this.waitingLaunchMinter = true;
 
-      // TODO: Launch minter code
-      console.log("Minter admin:", this.minterAdminAddress);
-      console.log("Minter cap:", this.minterCap);
-      console.log("Minter start date:", this.startDate);
-      console.log("Minter start timestamp:", this.minterStartTime);
-      console.log("Minter end date:", this.endDate);
-      console.log("Minter end timestamp:", this.minterEndTime);
+      // check if admin address is a valid address
+      if (!isAddress(this.minterAdminAddress)) {
+        let msg = "Invalid admin address";
+        console.error(msg);
+        this.waitingLaunchMinter = false;
+        this.errorMessage = msg;
+        return;
+      }
+
+      // check if zk cap is a number
+      if (!this.zkCapToWei) {
+        let msg = "Invalid ZK cap number";
+        console.error(msg);
+        this.waitingLaunchMinter = false;
+        this.errorMessage = msg;
+        return;
+      }
+
+      if (!this.startDate || !this.endDate || !this.minterStartTime || !this.minterEndTime) {
+        let msg = "Invalid start or end date";
+        console.error(msg);
+        this.waitingLaunchMinter = false;
+        this.errorMessage = msg;
+        return;
+      }
+
+      const factoryAddress = this.$config.public.factoryAddress[this.chainId];
+
+      const zkTokenAddress = this.$config.public.zkTokenAddress[this.chainId];
+      const adminAddress = this.minterAdminAddress;
+      const zkCapWei = this.zkCapToWei;
+      const startTimestamp = this.minterStartTime;
+      const endTimestamp = this.minterEndTime;
+      const salt = Math.floor(Date.now() / 1000);
+
+      try {
+        // Send the transaction
+        const tx = await writeContract({
+          address: factoryAddress,
+          abi: factoryAbi,
+          functionName: 'createCappedMinter',
+          args: [zkTokenAddress, adminAddress, zkCapWei, startTimestamp, endTimestamp, salt],
+        });
+
+        // Wait for transaction to be mined and get receipt
+        const receipt = await tx.wait();
+        console.log("Receipt:", receipt);
+
+        // Check if transaction was successful
+        if (!receipt || receipt.status === 0) {
+          throw new Error('Transaction failed');
+        }
+
+        // Find the CappedMinterV2Created event
+        const event = receipt.logs.find(log => {
+          try {
+            const parsed = decodeEventLog({
+              abi: factoryAbi,
+              data: log.data,
+              topics: log.topics,
+            });
+            return parsed.eventName === 'CappedMinterV2Created';
+          } catch {
+            return false;
+          }
+        });
+
+        if (event) {
+          const { args } = decodeEventLog({
+            abi: factoryAbi,
+            data: event.data,
+            topics: event.topics,
+          });
+
+          // Now you have access to all event parameters
+          const minterAddress = args.minter;
+          const mintableToken = args.mintable;
+          const admin = args.admin;
+          const cap = args.cap;
+          const startTime = args.startTime;
+          const expirationTime = args.expirationTime;
+
+          console.log('Minter created at:', minterAddress);
+          console.log('Event data:', {
+            mintableToken,
+            admin,
+            cap,
+            startTime,
+            expirationTime
+          });
+
+          this.minterContractAddress = minterAddress;
+          this.showSuccessMessage = true;
+        }
+
+      } catch (error) {
+        console.error('Error creating minter:', error);
+        this.errorMessage = error.message || 'Error creating minter';
+      } finally {
+        this.waitingLaunchMinter = false;
+      }
       
       this.waitingLaunchMinter = false;
     },

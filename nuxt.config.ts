@@ -50,6 +50,10 @@ export default defineNuxtConfig({
         300: 'https://sepolia.explorer.zksync.io',
         324: 'https://era.zksync.network',
       },
+      factoryAddress: {
+        "300": "0x329CE320a0Ef03F8c0E01195604b5ef7D3Fb150E",
+        "324": "0x0400E6bc22B68686Fb197E91f66E199C6b0DDD6a"
+      },
       favicon: '/img/favicon.svg',
       projectMetadataTitle: 'ZK Minter Launcher',
       projectDescription: 'A web3 app that helps you launch a ZK Capped Minter V2 smart contract via the official ZkCappedMinterV2Factory.sol contract.',
@@ -62,6 +66,10 @@ export default defineNuxtConfig({
       ],
       testVar: "test",
       wcProjectId: process.env.NUXT_PUBLIC_WC_PROJECT_ID,
+      zkTokenAddress: {
+        300: '0x69e5DC39E2bCb1C17053d2A4ee7CAEAAc5D36f96',
+        324: '0x5A7d6b2F92C77FAD6CCaBd7EE0624E64907Eaf3E',
+      },
     }
   }
 })
