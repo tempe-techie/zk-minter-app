@@ -71,7 +71,7 @@ export default defineNuxtConfig({
       testVar: "test",
       wcProjectId: process.env.NUXT_PUBLIC_WC_PROJECT_ID,
       zkTokenAddress: {
-        300: '0x69e5DC39E2bCb1C17053d2A4ee7CAEAAc5D36f96',
+        300: '0xbE6B3B0668d40FA042E2209462ED660AAf5874c7',
         324: '0x5A7d6b2F92C77FAD6CCaBd7EE0624E64907Eaf3E',
       },
     }
