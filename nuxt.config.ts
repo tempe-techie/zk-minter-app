@@ -50,6 +50,10 @@ export default defineNuxtConfig({
         300: 'https://sepolia.explorer.zksync.io',
         324: 'https://era.zksync.network',
       },
+      chainCurrency: {
+        300: 'ETH',
+        324: 'ETH',
+      },
       factoryAddress: {
         "300": "0x329CE320a0Ef03F8c0E01195604b5ef7D3Fb150E",
         "324": "0x0400E6bc22B68686Fb197E91f66E199C6b0DDD6a"

@@ -49,6 +49,8 @@
               </span>
             </a>
             
+            <span v-if="getUserBalance" class="dropdown-item">{{ getUserBalance }} {{ $config.public.chainCurrency[chainId] }}</span>
+
             <span class="dropdown-item" @click="disconnect">Disconnect</span>
           </div>
         </li>
@@ -103,8 +105,9 @@
 </template>
 
 <script>
-import { switchChain } from '@wagmi/core'
+import { getBalance, switchChain } from '@wagmi/core'
 import { useAccount, useConfig, useDisconnect } from '@wagmi/vue';
+import { formatEther } from 'viem'
 import ConnectButton from './components/ConnectButton.vue';
 
 export default {
@@ -112,6 +115,12 @@ export default {
 
   components: {
     ConnectButton,
+  },
+
+  data() {
+    return {
+      userBalanceWei: null,
+    }
   },
 
   computed: {
@@ -137,7 +146,16 @@ export default {
       }
 
       return null
-    }
+    },
+
+    getUserBalance() {
+      if (this.userBalanceWei) {
+        const balance = formatEther(Number(this.userBalanceWei));
+        return parseFloat(Number(balance).toFixed(4));
+      }
+
+      return null;
+    },
   },
 
   methods: {
@@ -165,6 +183,20 @@ export default {
       config,
       disconnect,
       status,
+    }
+  },
+
+  watch: {
+    async address(newAddress) {
+      const userBalanceData = await getBalance(this.config, { address: newAddress })
+      this.userBalanceWei = userBalanceData.value
+    },
+
+    async chainId() {
+      if (this.address) { 
+        const userBalanceData = await getBalance(this.config, { address: this.address })
+        this.userBalanceWei = userBalanceData.value
+      }
     }
   }
 }
