@@ -71,3 +71,38 @@ a:hover {
     margin-top: 15px;
   }
 }
+
+/* Add these modal-specific styles */
+.modal {
+  display: none;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal.show {
+  display: block;
+}
+
+.modal-dialog {
+  position: relative;
+  width: auto;
+  margin: 0.5rem;
+  pointer-events: auto;
+  max-width: 360px;
+  margin: 1.75rem auto;
+}
+
+.modal-content {
+  border-radius: 12px;
+  padding: 10px;
+}
+
+/* Ensure modal is above other content on mobile */
+.modal {
+  z-index: 1050;
+}
+
+/* Make wallet cards smaller on mobile */
+.card-img-wallet {
+  max-width: 60px;
+  margin: 0 auto;
+}

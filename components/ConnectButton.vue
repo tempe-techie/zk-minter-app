@@ -1,13 +1,13 @@
 <template>
-  <button class="btn" :class="getColor" data-bs-toggle="modal" data-bs-target="#connectModal">Connect wallet</button>
+  <button class="btn" :class="getColor" @click="openModal">Connect wallet</button>
 
   <!-- Connect Wallet modal -->
-  <div class="modal modal-sm fade" id="connectModal" tabindex="-1" aria-labelledby="connectModalLabel" aria-hidden="true">
+  <div class="modal modal-sm fade" id="connectModal" tabindex="-1" aria-labelledby="connectModalLabel" aria-hidden="true" :class="{'show': isModalOpen}" v-show="isModalOpen">
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Connect your wallet</h5>
-          <button id="closeConnectModal" type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn-close" @click="closeModal" aria-label="Close" id="closeConnectModal">
             <span aria-hidden="true"></span>
           </button>
         </div>
@@ -63,11 +63,27 @@ export default {
     }
   },
   
+  data() {
+    return {
+      isModalOpen: false
+    }
+  },
+
   methods: {    
+    openModal() {
+      this.isModalOpen = true;
+      document.body.classList.add('modal-open');
+    },
+
+    closeModal() {
+      this.isModalOpen = false;
+      document.body.classList.remove('modal-open');
+    },
+
     async connectInjected() {
       try {
         await this.connect({ connector: this.connectors[0], chainId: this.chainId });
-        document.getElementById('closeConnectModal').click();
+        this.closeModal();
       } catch (error) {
         console.error("Failed to connect injected wallet:", error);
       }
@@ -76,7 +92,7 @@ export default {
     async connectMetaMask() {
       try {
         await this.connect({ connector: this.connectors[2], chainId: this.chainId });
-        document.getElementById('closeConnectModal').click();
+        this.closeModal();
       } catch (error) {
         console.error("Failed to connect MetaMask:", error);
       }
@@ -85,7 +101,7 @@ export default {
     async connectRabby() {
       try {
         await this.connect({ connector: this.connectors[4], chainId: this.chainId });
-        document.getElementById('closeConnectModal').click();
+        this.closeModal();
       } catch (error) {
         console.error("Failed to connect rabby wallet:", error);
       }
@@ -94,7 +110,7 @@ export default {
     async connectWalletConnect() {
       try {
         await this.connect({ connector: this.connectors[1], chainId: this.chainId });
-        document.getElementById('closeConnectModal').click();
+        this.closeModal();
       } catch (error) {
         console.error("Failed to connect WalletConnect:", error);
       }

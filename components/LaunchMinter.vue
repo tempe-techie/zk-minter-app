@@ -74,7 +74,6 @@
                 <input 
                   class="form-control"
                   :value="inputValue"
-                  v-on="inputEvents"
                   placeholder="Select start date and time"
                   readonly
                 >
