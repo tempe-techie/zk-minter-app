@@ -167,7 +167,7 @@
 </template>
 
 <script>
-import { switchChain, writeContract } from '@wagmi/core';
+import { switchChain, waitForTransactionReceipt, writeContract } from '@wagmi/core';
 import { useAccount, useConfig, useDisconnect } from '@wagmi/vue';
 import { DatePicker } from 'v-calendar';
 import { isAddress, parseEther } from 'viem'
@@ -290,62 +290,27 @@ export default {
       const salt = Math.floor(Date.now() / 1000);
 
       try {
-        // Send the transaction
-        const tx = await writeContract({
+        // Send the transaction and get hash
+        const hash = await writeContract(this.config, {
           address: factoryAddress,
           abi: factoryAbi,
           functionName: 'createCappedMinter',
-          args: [zkTokenAddress, adminAddress, zkCapWei, startTimestamp, endTimestamp, salt],
+          args: [zkTokenAddress, adminAddress, Number(zkCapWei), Number(startTimestamp), Number(endTimestamp), Number(salt)],
         });
 
-        // Wait for transaction to be mined and get receipt
-        const receipt = await tx.wait();
-        console.log("Receipt:", receipt);
+        // Wait for transaction to be mined
+        const receipt = await waitForTransactionReceipt(this.config, { hash })
 
         // Check if transaction was successful
-        if (!receipt || receipt.status === 0) {
+        if (!receipt || receipt.status !== "success") {
           throw new Error('Transaction failed');
         }
 
-        // Find the CappedMinterV2Created event
-        const event = receipt.logs.find(log => {
-          try {
-            const parsed = decodeEventLog({
-              abi: factoryAbi,
-              data: log.data,
-              topics: log.topics,
-            });
-            return parsed.eventName === 'CappedMinterV2Created';
-          } catch {
-            return false;
-          }
-        });
+        console.log("Transaction successful.")
 
-        if (event) {
-          const { args } = decodeEventLog({
-            abi: factoryAbi,
-            data: event.data,
-            topics: event.topics,
-          });
-
-          // Now you have access to all event parameters
-          const minterAddress = args.minter;
-          const mintableToken = args.mintable;
-          const admin = args.admin;
-          const cap = args.cap;
-          const startTime = args.startTime;
-          const expirationTime = args.expirationTime;
-
-          console.log('Minter created at:', minterAddress);
-          console.log('Event data:', {
-            mintableToken,
-            admin,
-            cap,
-            startTime,
-            expirationTime
-          });
-
-          this.minterContractAddress = minterAddress;
+        if (receipt.contractAddress) {
+          console.log('Minter created at:', receipt.contractAddress);
+          this.minterContractAddress = receipt.contractAddress;
           this.showSuccessMessage = true;
         }
 
