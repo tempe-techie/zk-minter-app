@@ -59,7 +59,13 @@
       <div>
         <label for="startTimeField" class="form-label mt-4">Start time (UTC)</label>
         <div class="input-group">
-          <DatePicker v-model="startDate" mode="dateTime" is24hr timezone="UTC">
+          <DatePicker 
+            v-model="startDate" 
+            mode="dateTime" 
+            is24hr 
+            timezone="UTC"
+            @dayclick="(_, event) => {event.target.blur();}"
+          >
             <template v-slot="{ inputValue, inputEvents }">
               <div class="input-group">
                 <button class="btn btn-dark" type="button" v-on="inputEvents">
