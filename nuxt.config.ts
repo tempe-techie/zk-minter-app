@@ -4,6 +4,9 @@ import { defineNuxtConfig } from 'nuxt/config'
 export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@wagmi/vue/nuxt'],
+  css: [
+    'v-calendar/style.css'
+  ],
   compatibilityDate: '2025-01-16',
   app: {
     head: {

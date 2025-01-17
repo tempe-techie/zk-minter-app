@@ -46,13 +46,38 @@
       </div>
 
       <div>
-        <label for="adminAddressField" class="form-label mt-4">ZK token cap</label>
+        <label for="minterCapField" class="form-label mt-4">ZK token cap</label>
         <div class="input-group">
-          <input type="text" class="form-control" v-model="minterCap" placeholder="Max amount of ZK that can be minted">
           <span class="input-group-text">ZK</span>
+          <input type="text" class="form-control" v-model="minterCap" placeholder="Max amount of ZK that can be minted">
         </div>
-        <small id="adminAddressHelp" class="form-text text-muted">
+        <small id="minterCapHelp" class="form-text text-muted">
           The maximum number of ZK tokens that this contract can mint.
+        </small>
+      </div>
+
+      <div>
+        <label for="startTimeField" class="form-label mt-4">Start time (UTC)</label>
+        <div class="input-group">
+          <DatePicker v-model="startDate" mode="dateTime" is24hr timezone="UTC">
+            <template v-slot="{ inputValue, inputEvents }">
+              <div class="input-group">
+                <button class="btn btn-dark" type="button" v-on="inputEvents">
+                  <i class="bi bi-calendar-event"></i>
+                </button>
+                <input 
+                  class="form-control"
+                  :value="inputValue"
+                  v-on="inputEvents"
+                  placeholder="Select start date and time"
+                  readonly
+                >
+              </div>
+            </template>
+          </DatePicker>
+        </div>
+        <small id="startTimeHelp" class="form-text text-muted">
+          The date and time in UTC when the minter contract can start minting.
         </small>
       </div>
       <!-- END Create ZK Minter Form -->
@@ -94,12 +119,14 @@
 import { switchChain } from '@wagmi/core';
 import { useAccount, useConfig, useDisconnect } from '@wagmi/vue';
 import ConnectButton from './components/ConnectButton.vue';
+import { DatePicker } from 'v-calendar';
 
 export default {
   name: 'LaunchMinter',
 
   components: {
     ConnectButton,
+    DatePicker,
   },
 
   data() {
@@ -107,6 +134,7 @@ export default {
       minterAdminAddress: null,
       minterCap: null,
       waitingLaunchMinter: false,
+      startDate: null,
     }
   },
 
@@ -130,6 +158,10 @@ export default {
 
       return false;
     },
+
+    minterStartTime() {
+      return this.startDate ? Math.floor(this.startDate.getTime() / 1000) : null;
+    },
   },
 
   methods: {
@@ -149,6 +181,10 @@ export default {
       this.waitingLaunchMinter = true;
 
       // TODO: Launch minter code
+      console.log("Minter admin:", this.minterAdminAddress);
+      console.log("Minter cap:", this.minterCap);
+      console.log("Minter start date:", this.startDate);
+      console.log("Minter start timestamp:", this.minterStartTime);
       
       this.waitingLaunchMinter = false;
     },
