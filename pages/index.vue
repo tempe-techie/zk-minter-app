@@ -4,9 +4,9 @@
   </div>
 
   <!-- Navigation buttons -->
-  <div class="d-flex justify-content-center mb-5">
-    <NuxtLink to="/grant-minter-role" class="btn btn-primary me-3">Grant Minter</NuxtLink>
-    <NuxtLink to="/revoke-minter-role" class="btn btn-primary me-3">Revoke Minter</NuxtLink>
+  <div class="d-flex flex-wrap justify-content-center mb-5 gap-3">
+    <NuxtLink to="/grant-minter-role" class="btn btn-primary">Grant Minter</NuxtLink>
+    <NuxtLink to="/revoke-minter-role" class="btn btn-primary">Revoke Minter</NuxtLink>
     <NuxtLink to="/mint-zk" class="btn btn-primary">Mint ZK</NuxtLink>
   </div>
   <!-- END Navigation buttons -->
