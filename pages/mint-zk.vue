@@ -1,4 +1,21 @@
 <template>
+  <Head>
+    <Title>Mint ZK Tokens</Title>
+    <Meta name="description" content="Mint ZK Tokens via your ZK Minter Contract" />
+    <Link rel="icon" type="image/x-icon" :href="$config.public.favicon" />
+
+    <Meta property="og:title" content="Mint ZK Tokens" />
+    <Meta property="og:description" content="Mint ZK Tokens via your ZK Minter Contract" />
+    <Meta property="og:image" :content="$config.public.projectUrl + $config.public.previewImage" />
+
+    <Meta name="twitter:card" content="summary_large_image" />
+    <Meta name="twitter:site" :content="$config.public.projectTwitter" />
+    <Meta name="twitter:creator" :content="$config.public.projectTwitter" />
+    <Meta name="twitter:title" content="Mint ZK Tokens" />
+    <Meta name="twitter:description" content="Mint ZK Tokens via your ZK Minter Contract" />
+    <Meta name="twitter:image" :content="$config.public.projectUrl + $config.public.previewImage" />
+  </Head>
+
   <div class="mb-4">
     <MintZkTokens />
   </div>
