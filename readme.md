@@ -21,7 +21,7 @@ Website: https://zkminter.org/
 
 ## ZK Minter contracts directory
 
-1. [Ignite (TPP-1), 10 Minter contracts](https://forum.zknation.io/t/tpp-001-zksync-ignite-program-the-ignite-program/168/125#capped-minters-17):
+1. [Ignite (TPP-1), 10 Minter contracts](https://forum.zknation.io/t/tpp-001-zksync-ignite-program-the-ignite-program/168/125#capped-minters-17) (note that these are ZK Capped Minter V1 contracts, not compatible with zkminter.org frontend):
   - [0xe546AEaaC57584da7554e7F88154DeDAD30A82b0](https://era.zksync.network/address/0xe546AEaaC57584da7554e7F88154DeDAD30A82b0)
   - [0x11791c6249631555cEb75CB39128789E3954c2EC](https://era.zksync.network/address/0x11791c6249631555cEb75CB39128789E3954c2EC)
   - [0x3BC3f64d084bE6d3336f10340DC8424290FFc4ab](https://era.zksync.network/address/0x3BC3f64d084bE6d3336f10340DC8424290FFc4ab)

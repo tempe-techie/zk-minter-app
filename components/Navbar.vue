@@ -16,10 +16,6 @@
           <NuxtLink to="/about" class="btn btn-primary">About</NuxtLink>
         </li>
 
-        <li class="nav-item">
-          <NuxtLink to="/mint-zk" class="btn btn-primary">Mint ZK</NuxtLink>
-        </li>
-
         <li class="nav-item dropdown">
           <button 
             class="btn btn-primary dropdown-toggle" 
@@ -28,15 +24,28 @@
             aria-haspopup="true" 
             aria-expanded="false"
           >
-            Minter Roles
+            Actions
           </button>
 
           <div class="dropdown-menu dropdown-menu-end set-cursor-pointer">
+            <NuxtLink to="/" class="dropdown-item">
+              Launch Minter
+            </NuxtLink>
+
             <NuxtLink to="/grant-minter-role" class="dropdown-item">
               Grant Minter Role
             </NuxtLink>
+
             <NuxtLink to="/revoke-minter-role" class="dropdown-item">
               Revoke Minter Role
+            </NuxtLink>
+
+            <NuxtLink to="/mint-zk" class="dropdown-item">
+              Mint ZK
+            </NuxtLink>
+
+            <NuxtLink to="/minter-details" class="dropdown-item">
+              Check Minter Details
             </NuxtLink>
           </div>
         </li>
