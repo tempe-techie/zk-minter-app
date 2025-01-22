@@ -29,7 +29,7 @@
 
           <div class="dropdown-menu dropdown-menu-end set-cursor-pointer">
             <NuxtLink to="/" class="dropdown-item">
-              Launch Minter
+              Launch Minter Contract
             </NuxtLink>
 
             <NuxtLink to="/grant-minter-role" class="dropdown-item">
@@ -41,11 +41,11 @@
             </NuxtLink>
 
             <NuxtLink to="/mint-zk" class="dropdown-item">
-              Mint ZK
+              Mint ZK Tokens
             </NuxtLink>
 
             <NuxtLink to="/minter-details" class="dropdown-item">
-              Check Minter Details
+              Check Minter Contract Details
             </NuxtLink>
           </div>
         </li>
